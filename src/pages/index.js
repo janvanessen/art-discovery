@@ -1,10 +1,43 @@
 import * as React from "react"
 import { Link } from "gatsby"
 import { StaticImage } from "gatsby-plugin-image"
+import { graphql } from 'gatsby'
 
 import Layout from "../components/layout"
 import Seo from "../components/seo"
 import * as styles from "../components/index.module.css"
+
+
+export const query = graphql`
+query {
+
+
+artblocks {
+  projects(
+    where: {artistName:"Tyler Hobbs"}
+  ) {
+    name
+    id
+    projectId
+    artistName
+    description
+    baseUri
+    baseIpfsUri
+    website
+    useIpfs
+    pricePerTokenInWei
+    tokens {
+      id
+      tokenId
+      invocation
+      uri
+    }
+  }
+
+}
+
+  }
+`
 
 const links = [
   {
@@ -69,8 +102,23 @@ const moreLinks = [
 
 const utmParameters = `?utm_source=starter&utm_medium=start-page&utm_campaign=default-starter`
 
-const IndexPage = () => (
-  <Layout>
+const IndexPage = ({data}) => {
+
+  const tokens = data.artblocks.projects[1].tokens;
+  let tokenIds = tokens.map(token => token.tokenId);  
+  let selectedTokens = [];
+  for (let i = 0; i < 10; i++) {
+    const token = tokenIds[Math.floor(Math.random() * tokenIds.length)];
+    selectedTokens.push(token);
+  }
+
+  console.log('hello', data);
+  console.log(selectedTokens);
+
+  // const mediaUrl =  "https://media.artblocks.io/";
+  const mediaUrl = "https://res.cloudinary.com/art-blocks/image/fetch/f_auto,c_limit,w_384,q_auto/https://artblocks-mainnet.s3.amazonaws.com/";
+
+  return <Layout>
     <Seo title="Home" />
     <div className={styles.textCenter}>
       <StaticImage
@@ -110,6 +158,8 @@ const IndexPage = () => (
         </li>
       ))}
     </ul>
+
+    {selectedTokens.map((tokenId) => (<span key={tokenId}><img src={`${mediaUrl}${tokenId}.png`}/></span>))}    
     {moreLinks.map((link, i) => (
       <React.Fragment key={link.url}>
         <a href={`${link.url}${utmParameters}`}>{link.text}</a>
@@ -117,7 +167,7 @@ const IndexPage = () => (
       </React.Fragment>
     ))}
   </Layout>
-)
+  }
 
 /**
  * Head export to define metadata for the page
