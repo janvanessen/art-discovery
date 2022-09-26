@@ -24,18 +24,21 @@ const Layout = ({ children }) => {
     
   `)
 
-// maxWidth: `var(--size-content)`,
+  // maxWidth: `var(--size-content)`,
 
   return (
     <>
       <Header siteTitle={data.site.siteMetadata?.title || `Title`} />
       <div
         style={{
-          margin: `0 auto`,
           padding: `var(--size-gutter)`,
         }}
       >
-        <main>{children}</main>
+        <main
+          style={{
+          }}
+
+        >{children}</main>
         <footer
           style={{
             marginTop: `var(--space-5)`,

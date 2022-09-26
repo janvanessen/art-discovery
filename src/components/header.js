@@ -5,11 +5,15 @@ import { Link } from "gatsby"
 const Header = ({ siteTitle }) => (
   <header
     style={{
-      padding: `var(--space-4)`,
+      padding: `var(--space-2) var(--space-4)`,
       display: `flex`,
       alignItems: `left`,
       fontWeight:  `bold`,
-    }}
+      position: `sticky`,
+      top: `0`,
+      background: `hsl(0, 0%, 100%, 95%)`,
+      borderBottom: `1px solid #ededed`,
+     }}
   >
     <Link
       to="/"

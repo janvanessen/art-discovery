@@ -37,15 +37,38 @@ artblocks {
   }
 `
 
+
 const IndexPage = ({ data }) => {
+
+  useEffect(() => {
+
+    const handleScroll = event => {      
+      // If the sum of scrollY and innerHeight is greater or equal to the scrollHeight, it means we have reached the end of the document, and we need to load more images.
+      if(window.scrollY + window.innerHeight >= document.documentElement.scrollHeight){
+        loadImages();
+      }
+    };
+
+    function loadImages() {
+      console.log('load images');
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
 
   const tokens = data.artblocks.projects[1].tokens;
   let tokenIds = tokens.map(token => token.tokenId);
-  let selectedTokens = [];
-  for (let i = 0; i < 20; i++) {
-    const token = tokenIds[Math.floor(Math.random() * tokenIds.length)];
-    selectedTokens.push(token);
-  }
+  console.log(tokenIds.length);
+  let selectedTokens = tokenIds; // [];
+  // for (let i = 0; i < 20; i++) {
+  //   const token = tokenIds[Math.floor(Math.random() * tokenIds.length)];
+  //   selectedTokens.push(token);
+  // }  
 
   console.log('hello', data);
   console.log(selectedTokens);
