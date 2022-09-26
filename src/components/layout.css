@@ -1,14 +1,14 @@
 :root {
   --border-radius: 4px;
   --color-text: #333;
-  --color-primary: #7026b9;
+  --color-primary: #333;
   --color-code-bg: #fff4db;
   --color-code: #8a6534;
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
     sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
   --font-mono: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
     "Courier New", monospace;
-  --font-lg: 18px;
+  --font-lg: 28px;
   --font-md: 16px;
   --font-sm: 14px;
   --font-sx: 12px;
@@ -221,4 +221,13 @@ pre code:after,
 pre tt:before,
 pre tt:after {
   content: none;
+}
+
+
+#my-gallery {
+
+  display: grid;
+  height: 100%;
+  grid-template-columns: repeat(auto-fit, minmax(min-content, 200px));
+  gap: 20px;
 }

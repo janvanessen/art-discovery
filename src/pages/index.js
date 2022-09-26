@@ -1,11 +1,9 @@
-import * as React from "react"
-import { Link } from "gatsby"
-import { StaticImage } from "gatsby-plugin-image"
+import React, { useEffect } from 'react';
 import { graphql } from 'gatsby'
 
+import SimpleGallery from '../components/SimpleGalery';
 import Layout from "../components/layout"
 import Seo from "../components/seo"
-import * as styles from "../components/index.module.css"
 
 
 export const query = graphql`
@@ -39,75 +37,12 @@ artblocks {
   }
 `
 
-const links = [
-  {
-    text: "Tutorial",
-    url: "https://www.gatsbyjs.com/docs/tutorial",
-    description:
-      "A great place to get started if you're new to web development. Designed to guide you through setting up your first Gatsby site.",
-  },
-  {
-    text: "Examples",
-    url: "https://github.com/gatsbyjs/gatsby/tree/master/examples",
-    description:
-      "A collection of websites ranging from very basic to complex/complete that illustrate how to accomplish specific tasks within your Gatsby sites.",
-  },
-  {
-    text: "Plugin Library",
-    url: "https://www.gatsbyjs.com/plugins",
-    description:
-      "Learn how to add functionality and customize your Gatsby site or app with thousands of plugins built by our amazing developer community.",
-  },
-  {
-    text: "Build and Host",
-    url: "https://www.gatsbyjs.com/cloud",
-    description:
-      "Now you’re ready to show the world! Give your Gatsby site superpowers: Build and host on Gatsby Cloud. Get started for free!",
-  },
-]
-
-const samplePageLinks = [
-  {
-    text: "Page 2",
-    url: "page-2",
-    badge: false,
-    description:
-      "A simple example of linking to another page within a Gatsby site",
-  },
-  { text: "TypeScript", url: "using-typescript" },
-  { text: "Server Side Rendering", url: "using-ssr" },
-  { text: "Deferred Static Generation", url: "using-dsg" },
-]
-
-const moreLinks = [
-  { text: "Join us on Discord", url: "https://gatsby.dev/discord" },
-  {
-    text: "Documentation",
-    url: "https://gatsbyjs.com/docs/",
-  },
-  {
-    text: "Starters",
-    url: "https://gatsbyjs.com/starters/",
-  },
-  {
-    text: "Showcase",
-    url: "https://gatsbyjs.com/showcase/",
-  },
-  {
-    text: "Contributing",
-    url: "https://www.gatsbyjs.com/contributing/",
-  },
-  { text: "Issues", url: "https://github.com/gatsbyjs/gatsby/issues" },
-]
-
-const utmParameters = `?utm_source=starter&utm_medium=start-page&utm_campaign=default-starter`
-
-const IndexPage = ({data}) => {
+const IndexPage = ({ data }) => {
 
   const tokens = data.artblocks.projects[1].tokens;
-  let tokenIds = tokens.map(token => token.tokenId);  
+  let tokenIds = tokens.map(token => token.tokenId);
   let selectedTokens = [];
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 20; i++) {
     const token = tokenIds[Math.floor(Math.random() * tokenIds.length)];
     selectedTokens.push(token);
   }
@@ -115,59 +50,49 @@ const IndexPage = ({data}) => {
   console.log('hello', data);
   console.log(selectedTokens);
 
-  // const mediaUrl =  "https://media.artblocks.io/";
-  const mediaUrl = "https://res.cloudinary.com/art-blocks/image/fetch/f_auto,c_limit,w_384,q_auto/https://artblocks-mainnet.s3.amazonaws.com/";
+  const mediaUrlLarge = "https://media.artblocks.io/";
+  const mediaUrl = "https://res.cloudinary.com/art-blocks/image/fetch/f_auto,c_limit,w_200,q_auto/https://artblocks-mainnet.s3.amazonaws.com/";
+  const mediaUrlSmall = "https://res.cloudinary.com/art-blocks/image/fetch/f_auto,c_limit,w_400,q_auto/https://artblocks-mainnet.s3.amazonaws.com/";
+
+  // const artblockImageUrls = selectedTokens.map((tokenId) => (mediaUrl + tokenId + '.png'));
+  // const artblockImageLargeUrls = selectedTokens.map((tokenId) => (mediaUrlLarge + tokenId + '.png'));
+
+  const images = selectedTokens.map((tokenId, i) => {
+
+    let url = mediaUrl;
+    let height = 2400;
+    let width = 2000;
+    // if (i == 0) {
+    //   url = mediaUrlSmall;
+    //   height = 4800;
+    //   width = 4000;
+    // }
+
+    return {
+      thumbnailURL: url + tokenId + '.png',
+      largeURL: mediaUrlLarge + tokenId + '.png',
+      height,
+      width,
+    }
+  });
+  console.log(images);
+
 
   return <Layout>
     <Seo title="Home" />
-    <div className={styles.textCenter}>
-      <StaticImage
-        src="../images/example.png"
-        loading="eager"
-        width={64}
-        quality={95}
-        formats={["auto", "webp", "avif"]}
-        alt=""
-        style={{ marginBottom: `var(--space-3)` }}
+    <div>
+      <SimpleGallery
+        galleryID="my-gallery"
+        images={images}
       />
-      <h1>
-        Welcome to <b>Gatsby!</b>
-      </h1>
-      <p className={styles.intro}>
-        <b>Example pages:</b>{" "}
-        {samplePageLinks.map((link, i) => (
-          <React.Fragment key={link.url}>
-            <Link to={link.url}>{link.text}</Link>
-            {i !== samplePageLinks.length - 1 && <> · </>}
-          </React.Fragment>
-        ))}
-        <br />
-        Edit <code>src/pages/index.js</code> to update this page.
-      </p>
     </div>
-    <ul className={styles.list}>
-      {links.map(link => (
-        <li key={link.url} className={styles.listItem}>
-          <a
-            className={styles.listItemLink}
-            href={`${link.url}${utmParameters}`}
-          >
-            {link.text} ↗
-          </a>
-          <p className={styles.listItemDescription}>{link.description}</p>
-        </li>
-      ))}
-    </ul>
 
-    {selectedTokens.map((tokenId) => (<span key={tokenId}><img src={`${mediaUrl}${tokenId}.png`}/></span>))}    
-    {moreLinks.map((link, i) => (
-      <React.Fragment key={link.url}>
-        <a href={`${link.url}${utmParameters}`}>{link.text}</a>
-        {i !== moreLinks.length - 1 && <> · </>}
-      </React.Fragment>
-    ))}
   </Layout>
-  }
+}
+
+
+
+
 
 /**
  * Head export to define metadata for the page
