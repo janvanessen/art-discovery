@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { graphql } from 'gatsby'
 
 import SimpleGallery from '../components/SimpleGalery';
 import Layout from "../components/layout"
 import Seo from "../components/seo"
+
+import styled from 'styled-components';
 
 
 export const query = graphql`
@@ -37,8 +39,13 @@ artblocks {
   }
 `
 
-
 const IndexPage = ({ data }) => {
+
+  let allTokens = data.artblocks.projects[1].tokens;
+  let tokenIds = allTokens.map(token => token.tokenId);
+  const newTokens = tokenIds.splice(0,20);
+
+  const [tokens, setTokens] = useState(newTokens);
 
   useEffect(() => {
 
@@ -51,6 +58,11 @@ const IndexPage = ({ data }) => {
 
     function loadImages() {
       console.log('load images');
+      const newPart = tokenIds.splice(0,20);
+      const newTokens = tokens.concat(newPart);
+      console.log(tokens);
+      console.log(newTokens);
+      // setTokens(newTokens);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -61,26 +73,22 @@ const IndexPage = ({ data }) => {
   }, []);
 
 
-  const tokens = data.artblocks.projects[1].tokens;
-  let tokenIds = tokens.map(token => token.tokenId);
-  console.log(tokenIds.length);
-  let selectedTokens = tokenIds; // [];
+  // const tokens = data.artblocks.projects[1].tokens;
+  // 
+  // let selectedTokens = tokenIds; // [];
   // for (let i = 0; i < 20; i++) {
   //   const token = tokenIds[Math.floor(Math.random() * tokenIds.length)];
   //   selectedTokens.push(token);
   // }  
 
-  console.log('hello', data);
-  console.log(selectedTokens);
-
   const mediaUrlLarge = "https://media.artblocks.io/";
-  const mediaUrl = "https://res.cloudinary.com/art-blocks/image/fetch/f_auto,c_limit,w_200,q_auto/https://artblocks-mainnet.s3.amazonaws.com/";
+  const mediaUrl = "https://res.cloudinary.com/art-blocks/image/fetch/f_auto,c_limit,w_400,q_auto/https://artblocks-mainnet.s3.amazonaws.com/";
   const mediaUrlSmall = "https://res.cloudinary.com/art-blocks/image/fetch/f_auto,c_limit,w_400,q_auto/https://artblocks-mainnet.s3.amazonaws.com/";
 
   // const artblockImageUrls = selectedTokens.map((tokenId) => (mediaUrl + tokenId + '.png'));
   // const artblockImageLargeUrls = selectedTokens.map((tokenId) => (mediaUrlLarge + tokenId + '.png'));
 
-  const images = selectedTokens.map((tokenId, i) => {
+  const images = tokens.map((tokenId, i) => {
 
     let url = mediaUrl;
     let height = 2400;
@@ -114,9 +122,6 @@ const IndexPage = ({ data }) => {
 }
 
 
-
-
-
 /**
  * Head export to define metadata for the page
  *
@@ -125,3 +130,4 @@ const IndexPage = ({ data }) => {
 export const Head = () => <Seo title="Home" />
 
 export default IndexPage
+

@@ -225,9 +225,13 @@ pre tt:after {
 
 
 #my-gallery {
-
   display: grid;
   height: 100%;
-  grid-template-columns: repeat(auto-fit, minmax(min-content, 200px));
-  gap: 20px;
+  width: 80%;
+  grid-template-columns: auto auto auto;
+  gap: auto;
+  align-items: center;
+  padding: 50px;
 }
+
+
